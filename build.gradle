@@ -4,6 +4,7 @@ buildscript {
         gsonConvertorVersion = "2.9.0"
         hiltVersion = '2.43.2'
         retrofitVersion = '2.9.0'
+        roomVersion = '2.5.1'
     }
 
     dependencies {
