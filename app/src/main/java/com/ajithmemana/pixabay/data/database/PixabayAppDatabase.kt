@@ -5,6 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.ajithmemana.pixabay.data.database.dao.PixabayImagesDao
+import com.ajithmemana.pixabay.data.database.entity.PixabayImageItem
 
 /**
  * Created by ajithmemana
