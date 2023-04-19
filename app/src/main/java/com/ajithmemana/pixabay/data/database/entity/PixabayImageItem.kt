@@ -10,8 +10,9 @@ import androidx.room.PrimaryKey
 data class PixabayImageItem(
     @PrimaryKey val id: Long,
     val previewURL: String? = null,
+    val largeImageURL: String? = null,
     val tags: String? = null,
-    val user: String? = null,
+    val user: String,
     val likes: Int? = null,
     val comments: Int? = null,
     val downloads: Int? = null,

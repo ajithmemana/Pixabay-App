@@ -2,7 +2,12 @@ package com.ajithmemana.pixabay.data.repository
 
 import android.util.Log
 import com.ajithmemana.pixabay.data.api.PixabayImageService
+import com.ajithmemana.pixabay.data.database.dao.PixabayImagesDao
+import com.ajithmemana.pixabay.data.database.entity.PixabayImageItem
 import com.ajithmemana.pixabay.data.models.SearchResponse
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -11,24 +16,46 @@ import javax.inject.Inject
 /**
  * Created by ajithmemana
  */
-class ImagesRepository @Inject constructor(private val pixabayImageService: PixabayImageService) {
+class ImagesRepository @Inject constructor(
+    private val pixabayImageService: PixabayImageService,
+    private val pixabayImagesDao: PixabayImagesDao,
+) {
 
-    fun getImagesForQueryString() =
-        pixabayImageService.getImagesByQueryString(PIXABAY_API_KEY, "Bird").enqueue(
+    fun getImagesForQueryString(queryString: String) =
+        pixabayImageService.getImagesByQueryString(PIXABAY_API_KEY, queryString).enqueue(
             object : Callback<SearchResponse> {
                 override fun onResponse(
                     call: Call<SearchResponse>,
                     response: Response<SearchResponse>,
                 ) {
-                    Log.d("TEST", "Success calling api")
-                    Log.d("TEST", "${response.body()}")
+                    // Store date to DB
+                    val mappedList = response.body()?.hits?.map {
+                        PixabayImageItem(
+                            it?.id!!,
+                            it.webformatURL,
+                            it.largeImageURL,
+                            it.tags,
+                            it.user ?: "",
+                            it.likes,
+                            it.comments,
+                            it.downloads
+                        )
+                    }
+
+                    CoroutineScope(Dispatchers.IO).launch {
+                        pixabayImagesDao.deleteAll()
+                        pixabayImagesDao.insertAll(mappedList)
+                    }
                 }
 
                 override fun onFailure(call: Call<SearchResponse>, t: Throwable) {
                     Log.d("TEST", "onFailure calling api")
+                    //todo handle error
                 }
             }
         )
+
+    fun observeStoredImages() = pixabayImagesDao.getAllImages()
 
     companion object {
         const val PIXABAY_API_KEY = "18991208-205c1e43c5088662de2c7c8ff"

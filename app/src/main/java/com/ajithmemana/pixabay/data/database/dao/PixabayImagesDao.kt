@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.ajithmemana.pixabay.data.database.entity.PixabayImageItem
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PixabayImagesDao {
@@ -12,10 +13,10 @@ interface PixabayImagesDao {
     fun insert(imageItem: PixabayImageItem)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(vararg imageItems: PixabayImageItem)
+    fun insertAll (imageItems: List<PixabayImageItem>?)
 
     @Query("SELECT * FROM image_data")
-    fun getAllImages(): List<PixabayImageItem>
+    fun getAllImages(): Flow<List<PixabayImageItem>>
 
     @Query("DELETE FROM image_data")
     fun deleteAll()
