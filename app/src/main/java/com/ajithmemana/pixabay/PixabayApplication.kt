@@ -7,6 +7,6 @@ import dagger.hilt.android.HiltAndroidApp
  * Created by ajithmemana
  */
 @HiltAndroidApp
-class PixabayApp : Application() {
+class PixabayApplication : Application() {
 }
 

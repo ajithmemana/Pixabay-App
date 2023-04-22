@@ -36,7 +36,9 @@ import com.ajithmemana.pixabay.viewmodel.ImagesViewModel
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun PixabayImagesListScreen(imageData: List<PixabayImageItem>, viewModel: ImagesViewModel) {
+fun PixabayImagesListScreen(imageData: List<PixabayImageItem>, onSearchClick: (String)->Unit,
+                            onImageClick: (PixabayImageItem) -> Unit = {},
+) {
 
     Column {
         var queryString by remember { mutableStateOf(TextFieldValue("")) }
@@ -53,7 +55,7 @@ fun PixabayImagesListScreen(imageData: List<PixabayImageItem>, viewModel: Images
                 },
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                 keyboardActions = KeyboardActions(onSearch = {
-                    viewModel.performSearchUsingInput(queryString.text)
+                    onSearchClick(queryString.text)
                 })
             )
             
@@ -76,7 +78,7 @@ fun PixabayImagesListScreen(imageData: List<PixabayImageItem>, viewModel: Images
             userScrollEnabled = true
         ) {
             items(imageData.size) { index ->
-                ImageGridItem(imageData[index])
+                ImageGridItem(imageData[index], onImageClick)
             }
         }
     }

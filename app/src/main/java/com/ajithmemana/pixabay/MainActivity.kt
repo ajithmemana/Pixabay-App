@@ -13,7 +13,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.ajithmemana.pixabay.data.repository.ImagesRepository
-import com.ajithmemana.pixabay.ui.screen.PixabayImagesListScreen
+import com.ajithmemana.pixabay.ui.PixabayApp
 import com.ajithmemana.pixabay.ui.theme.PixabayTheme
 import com.ajithmemana.pixabay.viewmodel.ImagesViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -39,7 +39,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     images.value?.let {
-                        PixabayImagesListScreen(imageData = it, viewModel)
+                        PixabayApp(imageData = it, onSearchClicked = {})
                     }
                 }
             }
