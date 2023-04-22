@@ -39,7 +39,9 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     images.value?.let {
-                        PixabayApp(imageData = it, onSearchClicked = {})
+                        PixabayApp(
+                            imageData = it,
+                            onSearchClicked = { query -> viewModel.performSearchUsingInput(query) })
                     }
                 }
             }

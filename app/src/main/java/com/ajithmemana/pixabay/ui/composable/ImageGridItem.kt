@@ -1,5 +1,6 @@
 package com.ajithmemana.pixabay.ui.composable
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -7,6 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -20,7 +22,7 @@ import com.ajithmemana.pixabay.data.database.entity.PixabayImageItem
 fun ImageGridItem(imageItem: PixabayImageItem, onImageItemClick: (PixabayImageItem) -> (Unit)) {
 
     Card(modifier = Modifier.padding(5.dp), onClick = { onImageItemClick(imageItem) }) {
-        AsyncImage(model = imageItem.previewURL, contentDescription = null)
+        AsyncImage(model = imageItem.previewURL, contentDescription = null, contentScale = ContentScale.FillWidth)
         Text(
             modifier = Modifier.padding(8.dp, 0.dp),
             text = "Author: ${imageItem.user}",

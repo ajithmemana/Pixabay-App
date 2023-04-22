@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
@@ -31,7 +33,7 @@ import com.ajithmemana.pixabay.ui.composable.ImageStatsItem
 @Composable
 fun PixabayImageDetailScreen(imageItem: PixabayImageItem, onBackClick: () -> Unit) {
 
-    Column {
+    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
         IconButton(
             onClick = onBackClick,
             modifier = Modifier.padding(5.dp)
