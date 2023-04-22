@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.ajithmemana.pixabay.data.database.entity.PixabayImageItem
 
@@ -21,14 +22,18 @@ fun ImageGridItem(imageItem: PixabayImageItem, onImageItemClick: (PixabayImageIt
     Card(modifier = Modifier.padding(5.dp), onClick = { onImageItemClick(imageItem) }) {
         AsyncImage(model = imageItem.previewURL, contentDescription = null)
         Text(
-            modifier = Modifier.padding(5.dp, 0.dp),
+            modifier = Modifier.padding(8.dp, 0.dp),
             text = "Author: ${imageItem.user}",
-            color = Color.Black
+            fontSize = 14.sp,
+            color = Color.Black,
+            lineHeight = 18.sp
         )
         Text(
-            modifier = Modifier.padding(5.dp, 0.dp),
+            modifier = Modifier.padding(8.dp, 0.dp, 8.dp, 8.dp),
             text = "tags: ${imageItem.tags}",
             color = Color.DarkGray,
+            fontSize = 12.sp,
+            lineHeight = 16.sp
         )
     }
 }

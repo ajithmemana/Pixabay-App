@@ -1,15 +1,23 @@
 package com.ajithmemana.pixabay.ui.screen
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.ajithmemana.pixabay.R
 import com.ajithmemana.pixabay.data.database.entity.PixabayImageItem
+import com.ajithmemana.pixabay.ui.composable.ImageStatsItem
 
 /**
  * Pixabay image detail screen
@@ -26,6 +34,7 @@ fun PixabayImageDetailScreen(imageItem: PixabayImageItem, onBackClick: () -> Uni
     Column {
         IconButton(
             onClick = onBackClick,
+            modifier = Modifier.padding(5.dp)
         ) {
             Icon(
                 Icons.Filled.ArrowBack,
@@ -33,6 +42,24 @@ fun PixabayImageDetailScreen(imageItem: PixabayImageItem, onBackClick: () -> Uni
                 contentDescription = stringResource(id = R.string.app_name)
             )
         }
-        Text(text = "Detail page for image with id ${imageItem.user} ${imageItem.id}")
+        AsyncImage(
+            modifier = Modifier.fillMaxWidth(),
+            model = imageItem.largeImageURL,
+            contentDescription = null
+        )
+        Text(text = "Author: ${imageItem.user}", modifier = Modifier.padding(10.dp, 5.dp))
+        Text(text = "tags: ${imageItem.tags}", modifier = Modifier.padding(10.dp, 5.dp))
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .padding(0.dp, 10.dp),
+
+            horizontalArrangement = Arrangement.SpaceAround
+        ) {
+            ImageStatsItem(R.drawable.ic_like, imageItem.likes)
+            ImageStatsItem(R.drawable.ic_comment, imageItem.comments)
+            ImageStatsItem(R.drawable.ic_download, imageItem.downloads)
+
+        }
     }
 }

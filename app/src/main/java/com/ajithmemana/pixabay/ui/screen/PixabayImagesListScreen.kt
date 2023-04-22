@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
@@ -36,8 +37,9 @@ import com.ajithmemana.pixabay.viewmodel.ImagesViewModel
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun PixabayImagesListScreen(imageData: List<PixabayImageItem>, onSearchClick: (String)->Unit,
-                            onImageClick: (PixabayImageItem) -> Unit = {},
+fun PixabayImagesListScreen(
+    imageData: List<PixabayImageItem>, onSearchClick: (String) -> Unit,
+    onImageClick: (PixabayImageItem) -> Unit = {},
 ) {
 
     Column {
@@ -56,12 +58,17 @@ fun PixabayImagesListScreen(imageData: List<PixabayImageItem>, onSearchClick: (S
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                 keyboardActions = KeyboardActions(onSearch = {
                     onSearchClick(queryString.text)
-                })
+                }),
+                modifier = Modifier.weight(1.0f)
             )
-            
+
             Spacer(modifier = Modifier.width(10.dp))
 
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(
+                onClick = { /*TODO*/ }, modifier = Modifier
+                    .size(40.dp)
+                    .padding(5.dp)
+            ) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_image_search),
                     contentDescription = null,
