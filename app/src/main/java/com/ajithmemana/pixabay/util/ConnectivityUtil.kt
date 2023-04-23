@@ -3,12 +3,13 @@ package com.ajithmemana.pixabay.util
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 
 /**
  * Created by ajithmemana
  */
-var isNetworkConnected = mutableStateOf(true)
+var isNetworkConnected = mutableStateOf(false)
 
 val networkCallback = object : ConnectivityManager.NetworkCallback() {
 

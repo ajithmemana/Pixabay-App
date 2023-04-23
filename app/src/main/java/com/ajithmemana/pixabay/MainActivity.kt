@@ -34,6 +34,8 @@ class MainActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModels()
 
+    private lateinit var connectivityManager: ConnectivityManager
+
     var showNetworkError = mutableStateOf(false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,23 +75,27 @@ class MainActivity : ComponentActivity() {
         viewModel.fetchImagesForQueryString("fruits")
     }
 
+    override fun onStop() {
+        connectivityManager.unregisterNetworkCallback(networkCallback)
+        super.onStop()
+    }
+
     /**
      * Monitor internet connectivity changes and update a global state variable
      *
      */
     private fun observeConnectivityChanges() {
-
+        connectivityManager = getSystemService(
+            applicationContext,
+            ConnectivityManager::class.java
+        ) as ConnectivityManager
         val networkRequest = NetworkRequest.Builder()
             .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
             .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
             .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
             .build()
 
-        val connectivityManager = getSystemService(
-            applicationContext,
-            ConnectivityManager::class.java
-        ) as ConnectivityManager
-        connectivityManager.requestNetwork(networkRequest, networkCallback)
+        connectivityManager.registerNetworkCallback(networkRequest, networkCallback)
     }
 }
 
