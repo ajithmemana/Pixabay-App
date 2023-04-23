@@ -1,7 +1,6 @@
 package com.ajithmemana.pixabay
 
 import android.net.ConnectivityManager
-import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.os.Bundle
@@ -21,7 +20,9 @@ import androidx.core.content.ContextCompat.getSystemService
 import com.ajithmemana.pixabay.data.repository.ImagesRepository
 import com.ajithmemana.pixabay.ui.PixabayApp
 import com.ajithmemana.pixabay.ui.theme.PixabayTheme
-import com.ajithmemana.pixabay.viewmodel.ImagesViewModel
+import com.ajithmemana.pixabay.util.isNetworkConnected
+import com.ajithmemana.pixabay.util.networkCallback
+import com.ajithmemana.pixabay.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -30,17 +31,18 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var imagesRepository: ImagesRepository
-    private val viewModel: ImagesViewModel by viewModels()
+
+    private val viewModel: MainViewModel by viewModels()
+
     var showNetworkError = mutableStateOf(false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.startObservingDb()
-        monitorConnectivity()
+        observeConnectivityChanges()
         setContent {
-            val images = viewModel.searchResults.collectAsState(initial = null)
+            val images = viewModel.imageData.collectAsState(initial = null)
             PixabayTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -48,7 +50,7 @@ class MainActivity : ComponentActivity() {
                     images.value?.let {
                         PixabayApp(
                             imageData = it,
-                            onSearchClicked = { query -> searchForImages(query) },
+                            onSearchClicked = { queryText -> onSearchButtonClicked(queryText) },
                             showNetworkError
                         )
                     }
@@ -57,26 +59,25 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun searchForImages(queryText: String) {
-        if (networkCallback.isNetworkConnected.value) {
+    private fun onSearchButtonClicked(queryText: String) {
+        if (isNetworkConnected.value) {
             showNetworkError.value = false
-            viewModel.performSearchUsingInput(queryText)
+            viewModel.fetchImagesForQueryString(queryText)
         } else {
-            // Show network error
             showNetworkError.value = true
         }
     }
 
     override fun onResume() {
         super.onResume()
-        imagesRepository.getImagesForQueryString("fruits")
+        viewModel.fetchImagesForQueryString("fruits")
     }
 
     /**
-     * Monitor internet connectivity changes and update a local state variable
+     * Monitor internet connectivity changes and update a global state variable
      *
      */
-    private fun monitorConnectivity() {
+    private fun observeConnectivityChanges() {
 
         val networkRequest = NetworkRequest.Builder()
             .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
@@ -92,42 +93,10 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
-
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
     PixabayTheme {
-        Greeting("Android")
-    }
-}
-
-private val networkCallback = object : ConnectivityManager.NetworkCallback() {
-    var isNetworkConnected = mutableStateOf(true)
-
-    // network is available for use
-    override fun onAvailable(network: Network) {
-        super.onAvailable(network)
-        isNetworkConnected.value = true
-    }
-
-    // Network capabilities have changed for the network
-    override fun onCapabilitiesChanged(
-        network: Network,
-        networkCapabilities: NetworkCapabilities,
-    ) {
-        super.onCapabilitiesChanged(network, networkCapabilities)
-        val unMetered =
-            networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_METERED)
-        isNetworkConnected.value = unMetered
-    }
-
-    // lost network connection
-    override fun onLost(network: Network) {
-        super.onLost(network)
-        isNetworkConnected.value = false
+        Text(text = "Pixabay App")
     }
 }

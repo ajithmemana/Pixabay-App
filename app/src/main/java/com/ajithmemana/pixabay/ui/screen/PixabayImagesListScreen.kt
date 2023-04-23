@@ -1,5 +1,6 @@
 package com.ajithmemana.pixabay.ui.screen
 
+import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -34,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -56,7 +58,6 @@ fun PixabayImagesListScreen(
     onImageClick: (PixabayImageItem) -> Unit = {},
     showNetworkError: MutableState<Boolean>,
 ) {
-
     Column {
         Column(
             modifier = Modifier
@@ -80,10 +81,10 @@ fun PixabayImagesListScreen(
             if (showNetworkError.value) NetworkErrorMessage(
             ) { showNetworkError.value = false }
         }
-
+        val configuration = LocalConfiguration.current
         if (imageData.isNotEmpty()) {
             LazyVerticalStaggeredGrid(
-                columns = StaggeredGridCells.Fixed(2),
+                columns = StaggeredGridCells.Fixed(if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 3 else 2),
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(5.dp),
                 userScrollEnabled = true
@@ -101,7 +102,6 @@ fun PixabayImagesListScreen(
                     .padding(16.dp)
             )
         }
-
     }
 }
 

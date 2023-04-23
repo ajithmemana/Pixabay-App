@@ -6,6 +6,7 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 /**
+ * Retrofit service class to communicate with cloud server
  * Created by ajithmemana
  */
 interface PixabayImageService {

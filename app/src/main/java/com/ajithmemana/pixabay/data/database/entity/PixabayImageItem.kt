@@ -6,6 +6,8 @@ import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
 
 /**
+ * Database entity to store Image data. This class contains a subset of elements present in
+ * original response from cloud
  * Created by ajithmemana
  */
 @Entity(tableName = "image_data")

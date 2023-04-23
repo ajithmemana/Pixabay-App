@@ -14,14 +14,19 @@ import retrofit2.Response
 import javax.inject.Inject
 
 /**
+ * Repository to class to manage all image related operations
  * Created by ajithmemana
  */
 class ImagesRepository @Inject constructor(
     private val pixabayImageService: PixabayImageService,
     private val pixabayImagesDao: PixabayImagesDao,
 ) {
-
-    fun getImagesForQueryString(queryString: String) =
+    /**
+     * Fetch images from Pixabay cloud for a particular query string
+     *
+     * @param queryString - Input string param for Pixabay API.
+     */
+    fun fetchImagesForQueryString(queryString: String) =
         pixabayImageService.getImagesByQueryString(PIXABAY_API_KEY, queryString).enqueue(
             object : Callback<SearchResponse> {
                 override fun onResponse(
