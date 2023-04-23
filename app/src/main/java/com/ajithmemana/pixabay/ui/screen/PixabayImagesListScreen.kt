@@ -42,11 +42,17 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.ajithmemana.pixabay.R
 import com.ajithmemana.pixabay.data.database.entity.PixabayImageItem
 import com.ajithmemana.pixabay.ui.composable.ImageGridItem
+import com.ajithmemana.pixabay.ui.theme.Dimens.card_corner_large
+import com.ajithmemana.pixabay.ui.theme.Dimens.card_corner_normal
+import com.ajithmemana.pixabay.ui.theme.Dimens.grid_item_padding
+import com.ajithmemana.pixabay.ui.theme.Dimens.margin_large
+import com.ajithmemana.pixabay.ui.theme.Dimens.margin_medium
+import com.ajithmemana.pixabay.ui.theme.Dimens.margin_small
 import com.ajithmemana.pixabay.ui.theme.SearchBarBackground
+import com.ajithmemana.pixabay.ui.theme.Typography
 
 /**
  * Created by ajithmemana
@@ -61,20 +67,19 @@ fun PixabayImagesListScreen(
     Column {
         Column(
             modifier = Modifier
-                .clip(RoundedCornerShape(0.dp, 0.dp, 15.dp, 15.dp))
+                .clip(RoundedCornerShape(0.dp, 0.dp, card_corner_large, card_corner_large))
                 .background(SearchBarBackground)
         ) {
             Text(
                 text = stringResource(id = R.string.app_name),
-                color = Color.White,
-                fontSize = 22.sp,
-                modifier = Modifier.padding(16.dp, 8.dp, 16.dp, 0.dp)
+                style = Typography.titleLarge,
+                modifier = Modifier.padding(margin_large, margin_medium, margin_large, 0.dp)
             )
-            SearchBar(onSearchClick = onSearchClick, onImageClick = onImageClick)
+            SearchBar(onSearchClick = onSearchClick)
         }
         Spacer(
             modifier = Modifier
-                .height(5.dp)
+                .height(margin_small)
                 .fillMaxWidth()
         )
         AnimatedVisibility(visible = true) {
@@ -82,11 +87,12 @@ fun PixabayImagesListScreen(
             ) { showNetworkError.value = false }
         }
         val configuration = LocalConfiguration.current
+        // If image date is present show the grid, else show empty message
         if (imageData.isNotEmpty()) {
             LazyVerticalStaggeredGrid(
                 columns = StaggeredGridCells.Fixed(if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 3 else 2),
                 modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(5.dp),
+                contentPadding = PaddingValues(grid_item_padding),
                 userScrollEnabled = true
             ) {
                 items(imageData.size) { index ->
@@ -99,7 +105,7 @@ fun PixabayImagesListScreen(
                 text = stringResource(R.string.no_results_found),
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(16.dp)
+                    .padding(margin_large)
             )
         }
     }
@@ -108,13 +114,12 @@ fun PixabayImagesListScreen(
 @Composable
 fun SearchBar(
     onSearchClick: (String) -> Unit,
-    onImageClick: (PixabayImageItem) -> Unit = {},
 ) {
     var queryString by remember { mutableStateOf(TextFieldValue("")) }
 
     Row(
         Modifier
-            .padding(10.dp), verticalAlignment = (Alignment.CenterVertically)
+            .padding(margin_large), verticalAlignment = (Alignment.CenterVertically)
 
     ) {
 
@@ -123,28 +128,27 @@ fun SearchBar(
             onValueChange = {
                 queryString = it
             },
-
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
             keyboardActions = KeyboardActions(onSearch = {
                 onSearchClick(queryString.text)
             }),
             modifier = Modifier
                 .weight(1.0f)
-                .clip(RoundedCornerShape(5.dp))
+                .clip(RoundedCornerShape(card_corner_normal))
                 .background(Color.White)
                 .height(50.dp)
         )
 
-        Spacer(modifier = Modifier.width(10.dp))
+        Spacer(modifier = Modifier.width(margin_medium))
 
         IconButton(
             onClick = { onSearchClick(queryString.text) }, modifier = Modifier
-                .size(40.dp)
-                .padding(5.dp)
+                .size(36.dp)
+                .padding(margin_small)
         ) {
             Image(
                 painter = painterResource(id = R.drawable.ic_image_search),
-                contentDescription = null,
+                contentDescription = stringResource(id = R.string.content_desc_search),
             )
         }
     }
@@ -153,11 +157,11 @@ fun SearchBar(
 @Composable
 fun NetworkErrorMessage(dismissAlert: () -> Unit) {
     Row(verticalAlignment = Alignment.CenterVertically) {
-        Spacer(modifier = Modifier.width(16.dp))
+        Spacer(modifier = Modifier.width(margin_large))
         CircularProgressIndicator(modifier = Modifier.size(24.dp))
-        Spacer(modifier = Modifier.width(16.dp))
+        Spacer(modifier = Modifier.width(margin_large))
         Text(text = stringResource(id = R.string.error_network_not_available))
-        Spacer(modifier = Modifier.width(16.dp))
+        Spacer(modifier = Modifier.width(margin_large))
         Button(onClick = { dismissAlert() }) {
             Text(text = stringResource(id = R.string.button_ok))
         }

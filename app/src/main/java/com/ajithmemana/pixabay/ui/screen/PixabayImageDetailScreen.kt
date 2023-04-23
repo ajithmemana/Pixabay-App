@@ -20,6 +20,9 @@ import coil.compose.AsyncImage
 import com.ajithmemana.pixabay.R
 import com.ajithmemana.pixabay.data.database.entity.PixabayImageItem
 import com.ajithmemana.pixabay.ui.composable.ImageStatsItem
+import com.ajithmemana.pixabay.ui.theme.Dimens.margin_medium
+import com.ajithmemana.pixabay.ui.theme.Dimens.margin_normal
+import com.ajithmemana.pixabay.ui.theme.Dimens.margin_small
 
 /**
  * Pixabay image detail screen
@@ -36,12 +39,11 @@ fun PixabayImageDetailScreen(imageItem: PixabayImageItem, onBackClick: () -> Uni
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
         IconButton(
             onClick = onBackClick,
-            modifier = Modifier.padding(5.dp)
+            modifier = Modifier.padding(margin_small)
         ) {
             Icon(
                 Icons.Filled.ArrowBack,
-                //todo add 'back' string
-                contentDescription = stringResource(id = R.string.app_name)
+                contentDescription = stringResource(id = R.string.content_desc_back)
             )
         }
         AsyncImage(
@@ -49,12 +51,18 @@ fun PixabayImageDetailScreen(imageItem: PixabayImageItem, onBackClick: () -> Uni
             model = imageItem.largeImageURL,
             contentDescription = null
         )
-        Text(text = "Author: ${imageItem.user}", modifier = Modifier.padding(10.dp, 5.dp))
-        Text(text = "tags: ${imageItem.tags}", modifier = Modifier.padding(10.dp, 5.dp))
+        Text(
+            text = stringResource(id = R.string.label_author).plus(imageItem.user),
+            modifier = Modifier.padding(margin_normal, margin_small)
+        )
+        Text(
+            text = stringResource(id = R.string.label_tags).plus(imageItem.tags),
+            modifier = Modifier.padding(margin_normal, margin_small)
+        )
         Row(
             Modifier
                 .fillMaxWidth()
-                .padding(0.dp, 10.dp),
+                .padding(0.dp, margin_medium),
 
             horizontalArrangement = Arrangement.SpaceAround
         ) {

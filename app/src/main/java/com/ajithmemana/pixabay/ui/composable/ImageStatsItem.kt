@@ -8,6 +8,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.sp
 
+/**
+ * Composable item to display a number and icon that represent stats - ex: downloads, likes, comments etc
+ *
+ * @param iconRes - icon resource id
+ * @param count - number associated with stats item (ex: Number of downloads)
+ */
 @Composable
 fun ImageStatsItem(iconRes: Int, count: Int?) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {

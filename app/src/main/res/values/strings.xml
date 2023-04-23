@@ -3,4 +3,9 @@
     <string name="error_network_not_available">You\'re not connected to internet!</string>
     <string name="button_ok">Ok</string>
     <string name="no_results_found">No results found!</string>
+    <string name="label_author">Author:</string>
+    <string name="label_tags">tags:</string>
+
+    <string name="content_desc_back">Back</string>
+    <string name="content_desc_search">Search</string>
 </resources>
