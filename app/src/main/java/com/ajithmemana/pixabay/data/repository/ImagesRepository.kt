@@ -37,7 +37,7 @@ class ImagesRepository @Inject constructor(
                     val mappedList = response.body()?.hits?.map {
                         PixabayImageItem(
                             it?.id!!,
-                            it.webformatURL,
+                            it.previewURL,
                             it.largeImageURL,
                             it.tags,
                             it.user ?: "",
