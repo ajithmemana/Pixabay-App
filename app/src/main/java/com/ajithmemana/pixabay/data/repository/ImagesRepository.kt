@@ -5,6 +5,7 @@ import com.ajithmemana.pixabay.data.api.PixabayImageService
 import com.ajithmemana.pixabay.data.database.dao.PixabayImagesDao
 import com.ajithmemana.pixabay.data.database.entity.PixabayImageItem
 import com.ajithmemana.pixabay.data.models.SearchResponse
+import com.ajithmemana.pixabay.util.PIXABAY_API_KEY
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -64,8 +65,5 @@ class ImagesRepository @Inject constructor(
 
     fun observeStoredImages() = pixabayImagesDao.getAllImages()
 
-    companion object {
-        const val PIXABAY_API_KEY = "18991208-205c1e43c5088662de2c7c8ff"
-    }
 }
 

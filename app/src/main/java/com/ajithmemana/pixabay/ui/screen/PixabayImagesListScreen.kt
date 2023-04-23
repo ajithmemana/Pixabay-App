@@ -55,6 +55,8 @@ import com.ajithmemana.pixabay.ui.theme.Dimens.margin_medium
 import com.ajithmemana.pixabay.ui.theme.Dimens.margin_small
 import com.ajithmemana.pixabay.ui.theme.SearchBarBackground
 import com.ajithmemana.pixabay.ui.theme.Typography
+import com.ajithmemana.pixabay.util.NUM_ROWS_LANDSCAPE
+import com.ajithmemana.pixabay.util.NUM_ROWS_PORTRAIT
 
 /**
  * Created by ajithmemana
@@ -92,10 +94,12 @@ fun PixabayImagesListScreen(
             ) { showNetworkError.value = false }
         }
         val configuration = LocalConfiguration.current
+        val numOfColumns =
+            if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) NUM_ROWS_LANDSCAPE else NUM_ROWS_PORTRAIT
         // Vertical Image Grid -  If image date is present show the grid, else show empty message
         if (imageData.isNotEmpty()) {
             LazyVerticalStaggeredGrid(
-                columns = StaggeredGridCells.Fixed(if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 3 else 2),
+                columns = StaggeredGridCells.Fixed(numOfColumns),
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(grid_item_padding),
                 userScrollEnabled = true
