@@ -38,6 +38,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ajithmemana.pixabay.R
@@ -80,16 +81,27 @@ fun PixabayImagesListScreen(
             ) { showNetworkError.value = false }
         }
 
-        LazyVerticalStaggeredGrid(
-            columns = StaggeredGridCells.Fixed(2),
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(5.dp),
-            userScrollEnabled = true
-        ) {
-            items(imageData.size) { index ->
-                ImageGridItem(imageData[index], onImageClick)
+        if (imageData.isNotEmpty()) {
+            LazyVerticalStaggeredGrid(
+                columns = StaggeredGridCells.Fixed(2),
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(5.dp),
+                userScrollEnabled = true
+            ) {
+                items(imageData.size) { index ->
+                    ImageGridItem(imageData[index], onImageClick)
+                }
             }
+        } else {
+            Text(
+                textAlign = TextAlign.Center,
+                text = stringResource(R.string.no_results_found),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
+            )
         }
+
     }
 }
 
