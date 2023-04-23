@@ -2,6 +2,7 @@ package com.ajithmemana.pixabay.ui
 
 import android.net.Uri
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -24,10 +25,12 @@ import com.google.gson.Gson
 fun PixabayApp(
     imageData: List<PixabayImageItem>,
     onSearchClicked: (String) -> Unit = {},
+    showNetworkError: MutableState<Boolean>
 ) {
     val navController = rememberNavController()
     PixabayAppNavHost(
-        navController = navController, imageData = imageData, onSearchClicked = onSearchClicked
+        navController = navController, imageData = imageData, onSearchClicked = onSearchClicked,
+        showNetworkError = showNetworkError
     )
 }
 
@@ -36,6 +39,7 @@ fun PixabayAppNavHost(
     navController: NavHostController,
     imageData: List<PixabayImageItem>,
     onSearchClicked: (String) -> Unit = {},
+    showNetworkError: MutableState<Boolean>
 ) {
     NavHost(
         navController = navController, startDestination = NavigationRoute.IMAGES_LIST.route
@@ -47,7 +51,8 @@ fun PixabayAppNavHost(
                 onImageClick = {
                     val data = Uri.encode(Gson().toJson(it))
                     navController.navigate("${NavigationRoute.IMAGE_DETAILS.route}/$data")
-                })
+                },
+                showNetworkError)
         }
         // Screen 2
         composable(

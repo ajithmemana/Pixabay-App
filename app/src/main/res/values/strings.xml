@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Pixabay</string>
+    <string name="error_network_not_available">You\'re not connected to internet!</string>
+    <string name="button_ok">Ok</string>
 </resources>

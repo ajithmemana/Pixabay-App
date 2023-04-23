@@ -1,5 +1,6 @@
 package com.ajithmemana.pixabay.ui.screen
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -18,10 +19,13 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.Button
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
@@ -48,6 +53,7 @@ import com.ajithmemana.pixabay.ui.theme.SearchBarBackground
 fun PixabayImagesListScreen(
     imageData: List<PixabayImageItem>, onSearchClick: (String) -> Unit,
     onImageClick: (PixabayImageItem) -> Unit = {},
+    showNetworkError: MutableState<Boolean>,
 ) {
 
     Column {
@@ -57,7 +63,7 @@ fun PixabayImagesListScreen(
                 .background(SearchBarBackground)
         ) {
             Text(
-                text = "Pixabay",
+                text = stringResource(id = R.string.app_name),
                 color = Color.White,
                 fontSize = 22.sp,
                 modifier = Modifier.padding(16.dp, 8.dp, 16.dp, 0.dp)
@@ -69,6 +75,10 @@ fun PixabayImagesListScreen(
                 .height(5.dp)
                 .fillMaxWidth()
         )
+        AnimatedVisibility(visible = true) {
+            if (showNetworkError.value) NetworkErrorMessage(
+            ) { showNetworkError.value = false }
+        }
 
         LazyVerticalStaggeredGrid(
             columns = StaggeredGridCells.Fixed(2),
@@ -124,6 +134,20 @@ fun SearchBar(
                 painter = painterResource(id = R.drawable.ic_image_search),
                 contentDescription = null,
             )
+        }
+    }
+}
+
+@Composable
+fun NetworkErrorMessage(dismissAlert: () -> Unit) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Spacer(modifier = Modifier.width(16.dp))
+        CircularProgressIndicator(modifier = Modifier.size(24.dp))
+        Spacer(modifier = Modifier.width(16.dp))
+        Text(text = stringResource(id = R.string.error_network_not_available))
+        Spacer(modifier = Modifier.width(16.dp))
+        Button(onClick = { dismissAlert() }) {
+            Text(text = stringResource(id = R.string.button_ok))
         }
     }
 }
