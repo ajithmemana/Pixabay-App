@@ -1,5 +1,6 @@
 package com.ajithmemana.pixabay.ui.composable
 
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -28,6 +29,7 @@ fun ImageGridItem(imageItem: PixabayImageItem, onImageItemClick: (PixabayImageIt
 
     Card(modifier = Modifier.padding(margin_small), onClick = { onImageItemClick(imageItem) }) {
         AsyncImage(
+            modifier = Modifier.aspectRatio(imageItem.getAspectRatio()),
             model = imageItem.previewURL,
             contentScale = ContentScale.FillBounds,
             alignment = Alignment.Center,

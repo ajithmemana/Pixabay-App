@@ -43,7 +43,9 @@ class ImagesRepository @Inject constructor(
                             it.user ?: "",
                             it.likes,
                             it.comments,
-                            it.downloads
+                            it.downloads,
+                            it.webformatWidth,
+                            it.webformatHeight
                         )
                     }
 

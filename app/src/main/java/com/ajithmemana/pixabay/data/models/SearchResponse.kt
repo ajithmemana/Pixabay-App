@@ -17,7 +17,7 @@ data class SearchResponse(
 data class HitsItem(
 
 	@field:SerializedName("webformatHeight")
-	val webformatHeight: Int? = null,
+	val webformatHeight: Float = 0.0f,
 
 	@field:SerializedName("imageWidth")
 	val imageWidth: Int? = null,
@@ -71,7 +71,7 @@ data class HitsItem(
 	val imageSize: Int? = null,
 
 	@field:SerializedName("webformatWidth")
-	val webformatWidth: Int? = null,
+	val webformatWidth: Float = 0.0f,
 
 	@field:SerializedName("user")
 	val user: String? = null,

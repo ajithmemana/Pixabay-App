@@ -3,6 +3,7 @@ package com.ajithmemana.pixabay.ui.screen
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -47,10 +48,13 @@ fun PixabayImageDetailScreen(imageItem: PixabayImageItem, onBackClick: () -> Uni
             )
         }
         AsyncImage(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(imageItem.getAspectRatio()),
             model = imageItem.largeImageURL,
             contentDescription = null
         )
+
         Text(
             text = stringResource(id = R.string.label_author).plus(imageItem.user),
             modifier = Modifier.padding(margin_normal, margin_small)
