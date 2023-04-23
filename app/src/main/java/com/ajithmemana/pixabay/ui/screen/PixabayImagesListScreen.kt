@@ -29,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -44,6 +45,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.ajithmemana.pixabay.R
 import com.ajithmemana.pixabay.data.database.entity.PixabayImageItem
+import com.ajithmemana.pixabay.ui.composable.ConfirmationDialog
 import com.ajithmemana.pixabay.ui.composable.ImageGridItem
 import com.ajithmemana.pixabay.ui.theme.Dimens.card_corner_large
 import com.ajithmemana.pixabay.ui.theme.Dimens.card_corner_normal
@@ -64,6 +66,8 @@ fun PixabayImagesListScreen(
     onImageClick: (PixabayImageItem) -> Unit = {},
     showNetworkError: MutableState<Boolean>,
 ) {
+    val tappedImageItem = remember { mutableStateOf<PixabayImageItem?>(null) }
+
     Column {
         Column(
             modifier = Modifier
@@ -82,12 +86,13 @@ fun PixabayImagesListScreen(
                 .height(margin_small)
                 .fillMaxWidth()
         )
+        // Network warning
         AnimatedVisibility(visible = true) {
             if (showNetworkError.value) NetworkErrorMessage(
             ) { showNetworkError.value = false }
         }
         val configuration = LocalConfiguration.current
-        // If image date is present show the grid, else show empty message
+        // Vertical Image Grid -  If image date is present show the grid, else show empty message
         if (imageData.isNotEmpty()) {
             LazyVerticalStaggeredGrid(
                 columns = StaggeredGridCells.Fixed(if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 3 else 2),
@@ -96,7 +101,9 @@ fun PixabayImagesListScreen(
                 userScrollEnabled = true
             ) {
                 items(imageData.size) { index ->
-                    ImageGridItem(imageData[index], onImageClick)
+                    ImageGridItem(imageData[index]) { data ->
+                        tappedImageItem.value = data
+                    }
                 }
             }
         } else {
@@ -109,13 +116,23 @@ fun PixabayImagesListScreen(
             )
         }
     }
+    // Confirmation Dialogue - If an item is selected, show confirmation dialogue
+    if (tappedImageItem.value != null) {
+        ConfirmationDialog(dismissAlert = { tappedImageItem.value = null }) {
+            tappedImageItem.value?.let { it1 -> onImageClick(it1) }
+        }
+    }
 }
 
 @Composable
 fun SearchBar(
     onSearchClick: (String) -> Unit,
 ) {
-    var queryString by rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(TextFieldValue("")) }
+    var queryString by rememberSaveable(stateSaver = TextFieldValue.Saver) {
+        mutableStateOf(
+            TextFieldValue("")
+        )
+    }
 
     Row(
         Modifier

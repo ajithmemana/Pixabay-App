@@ -8,4 +8,8 @@
 
     <string name="content_desc_back">Back</string>
     <string name="content_desc_search">Search</string>
+    <string name="message_confirmation_dialog">Do you want to see a larger version of this image?</string>
+    <string name="title_confirmation_dialog">View Image Details?</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="button_proceed">Proceed</string>
 </resources>
