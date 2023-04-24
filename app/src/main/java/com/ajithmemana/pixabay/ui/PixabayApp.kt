@@ -76,7 +76,12 @@ fun PixabayAppNavHost(
             val data =
                 it.arguments?.getParcelable<PixabayImageItem>(NavigationRouteParams.IMAGE_ITEM.value)
             data?.let { imageItem ->
-                PixabayImageDetailScreen(imageItem, onBackClick = { navController.navigateUp() })
+                PixabayImageDetailScreen(
+                    imageItem,
+                    onBackClick = { navController.navigateUp() },
+                    onTagClick = {
+                        //TODO Optional - Initiate a search with tag string and go to home screen
+                    })
             }
         }
 

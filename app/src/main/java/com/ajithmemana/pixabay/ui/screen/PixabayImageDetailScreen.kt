@@ -15,15 +15,15 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.ajithmemana.pixabay.R
 import com.ajithmemana.pixabay.data.database.entity.PixabayImageItem
 import com.ajithmemana.pixabay.ui.composable.ImageStatsItem
+import com.ajithmemana.pixabay.ui.composable.TagItem
+import com.ajithmemana.pixabay.ui.theme.Dimens.margin_large
 import com.ajithmemana.pixabay.ui.theme.Dimens.margin_medium
-import com.ajithmemana.pixabay.ui.theme.Dimens.margin_normal
 import com.ajithmemana.pixabay.ui.theme.Dimens.margin_small
 import com.ajithmemana.pixabay.ui.theme.textColorPrimary
 
@@ -37,7 +37,10 @@ import com.ajithmemana.pixabay.ui.theme.textColorPrimary
  * Created by ajithmemana
  */
 @Composable
-fun PixabayImageDetailScreen(imageItem: PixabayImageItem, onBackClick: () -> Unit) {
+fun PixabayImageDetailScreen(
+    imageItem: PixabayImageItem, onBackClick: () -> Unit,
+    onTagClick: (String) -> Unit,
+) {
 
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
         IconButton(
@@ -46,7 +49,7 @@ fun PixabayImageDetailScreen(imageItem: PixabayImageItem, onBackClick: () -> Uni
         ) {
             Icon(
                 Icons.Filled.ArrowBack,
-                tint =  textColorPrimary,
+                tint = textColorPrimary,
                 contentDescription = stringResource(id = R.string.content_desc_back)
             )
         }
@@ -60,14 +63,15 @@ fun PixabayImageDetailScreen(imageItem: PixabayImageItem, onBackClick: () -> Uni
 
         Text(
             text = stringResource(id = R.string.label_author).plus(imageItem.user),
-            modifier = Modifier.padding(margin_normal, margin_small),
+            modifier = Modifier.padding(margin_large, margin_small),
             color = textColorPrimary
         )
-        Text(
-            text = stringResource(id = R.string.label_tags).plus(imageItem.tags),
-            modifier = Modifier.padding(margin_normal, margin_small),
-            color = textColorPrimary
-        )
+
+        imageItem.tags?.split(",")?.let {
+            TagItem(tags = it) {tagString->
+                onTagClick(tagString)
+            }
+        }
         Row(
             Modifier
                 .fillMaxWidth()

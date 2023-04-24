@@ -13,9 +13,9 @@ object Dimens {
     val margin_large: Dp = 16.dp
     val margin_xlarge: Dp = 24.dp
 
-    val card_corner_normal:Dp = 4.dp
-    val card_corner_large:Dp = 16.dp
+    val card_corner_normal: Dp = 4.dp
+    val card_corner_large: Dp = 16.dp
 
-    val grid_item_padding:Dp = 4.dp
+    val grid_item_padding: Dp = 4.dp
 }
 
