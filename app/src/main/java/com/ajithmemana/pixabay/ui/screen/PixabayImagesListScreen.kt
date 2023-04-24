@@ -5,6 +5,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -21,6 +22,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material3.CircularProgressIndicator
@@ -53,10 +55,13 @@ import com.ajithmemana.pixabay.ui.theme.Dimens.grid_item_padding
 import com.ajithmemana.pixabay.ui.theme.Dimens.margin_large
 import com.ajithmemana.pixabay.ui.theme.Dimens.margin_medium
 import com.ajithmemana.pixabay.ui.theme.Dimens.margin_small
-import com.ajithmemana.pixabay.ui.theme.SearchBarBackground
+import com.ajithmemana.pixabay.ui.theme.Dimens.margin_xlarge
 import com.ajithmemana.pixabay.ui.theme.Typography
+import com.ajithmemana.pixabay.ui.theme.searchBarBackground
+import com.ajithmemana.pixabay.ui.theme.textColorPrimary
 import com.ajithmemana.pixabay.util.NUM_ROWS_LANDSCAPE
 import com.ajithmemana.pixabay.util.NUM_ROWS_PORTRAIT
+import com.ajithmemana.pixabay.util.isNetworkConnected
 
 /**
  * Created by ajithmemana
@@ -67,6 +72,8 @@ fun PixabayImagesListScreen(
     imageData: List<PixabayImageItem>, onSearchClick: (String) -> Unit,
     onImageClick: (PixabayImageItem) -> Unit = {},
     showNetworkError: MutableState<Boolean>,
+    showEmptyStringError: MutableState<Boolean>,
+    showLoadingIndicator: MutableState<Boolean>,
 ) {
     val tappedImageItem = remember { mutableStateOf<PixabayImageItem?>(null) }
 
@@ -74,25 +81,44 @@ fun PixabayImagesListScreen(
         Column(
             modifier = Modifier
                 .clip(RoundedCornerShape(0.dp, 0.dp, card_corner_large, card_corner_large))
-                .background(SearchBarBackground)
+                .background(searchBarBackground)
         ) {
             Text(
                 text = stringResource(id = R.string.app_name),
                 style = Typography.titleLarge,
-                modifier = Modifier.padding(margin_large, margin_medium, margin_large, 0.dp)
+                modifier = Modifier.padding(margin_large, margin_large, margin_large, 0.dp),
+                color = Color.White
             )
             SearchBar(onSearchClick = onSearchClick)
         }
         Spacer(
             modifier = Modifier
-                .height(margin_small)
+                .height(margin_medium)
                 .fillMaxWidth()
         )
-        // Network warning
-        AnimatedVisibility(visible = true) {
-            if (showNetworkError.value) NetworkErrorMessage(
-            ) { showNetworkError.value = false }
+
+        // Empty string warning
+        AnimatedVisibility(visible = showEmptyStringError.value) {
+            NetworkErrorMessage(R.string.error_empty_search_query) {
+                showEmptyStringError.value = false
+            }
         }
+        // Network warning
+        AnimatedVisibility(visible = showNetworkError.value && !isNetworkConnected.value) {
+            NetworkErrorMessage(R.string.error_network_not_available) {
+                showNetworkError.value = false
+            }
+        }
+
+        AnimatedVisibility(
+            modifier = Modifier.fillMaxWidth(),
+            visible = showLoadingIndicator.value
+        ) {
+            Row(horizontalArrangement = Arrangement.Center) {
+                CircularProgressIndicator(modifier = Modifier.size(32.dp))
+            }
+        }
+
         val configuration = LocalConfiguration.current
         val numOfColumns =
             if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) NUM_ROWS_LANDSCAPE else NUM_ROWS_PORTRAIT
@@ -116,14 +142,22 @@ fun PixabayImagesListScreen(
                 text = stringResource(R.string.no_results_found),
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(margin_large)
+                    .padding(margin_large),
+                color = textColorPrimary
             )
         }
     }
     // Confirmation Dialogue - If an item is selected, show confirmation dialogue
     if (tappedImageItem.value != null) {
         ConfirmationDialog(dismissAlert = { tappedImageItem.value = null }) {
-            tappedImageItem.value?.let { it1 -> onImageClick(it1) }
+            tappedImageItem.value?.let { it1 ->
+                if (isNetworkConnected.value) {
+                    onImageClick(it1)
+                } else {
+                    showNetworkError.value = true
+                    tappedImageItem.value = null
+                }
+            }
         }
     }
 }
@@ -157,7 +191,7 @@ fun SearchBar(
                 .weight(1.0f)
                 .clip(RoundedCornerShape(card_corner_normal))
                 .background(Color.White)
-                .height(50.dp)
+                .height(50.dp),
         )
 
         Spacer(modifier = Modifier.width(margin_medium))
@@ -176,14 +210,25 @@ fun SearchBar(
 }
 
 @Composable
-fun NetworkErrorMessage(dismissAlert: () -> Unit) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
+fun NetworkErrorMessage(resId: Int, dismissAlert: () -> Unit) {
+    Row(
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+
+        Spacer(modifier = Modifier.width(margin_xlarge))
+        Text(
+            text = stringResource(id = resId),
+            color = textColorPrimary
+        )
         Spacer(modifier = Modifier.width(margin_large))
-        CircularProgressIndicator(modifier = Modifier.size(24.dp))
-        Spacer(modifier = Modifier.width(margin_large))
-        Text(text = stringResource(id = R.string.error_network_not_available))
-        Spacer(modifier = Modifier.width(margin_large))
-        Button(onClick = { dismissAlert() }) {
+        Button(
+            onClick = { dismissAlert() },
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = Color.DarkGray,
+                contentColor = Color.White
+            ),
+        ) {
             Text(text = stringResource(id = R.string.button_ok))
         }
     }

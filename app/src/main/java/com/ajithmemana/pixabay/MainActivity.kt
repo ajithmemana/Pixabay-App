@@ -36,7 +36,8 @@ class MainActivity : ComponentActivity() {
 
     private lateinit var connectivityManager: ConnectivityManager
 
-    var showNetworkError = mutableStateOf(false)
+    private var showNetworkError = mutableStateOf(false)
+    private var showEmptyQueryError = mutableStateOf(false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,24 +50,33 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+
                     images.value?.let {
                         PixabayApp(
                             imageData = it,
                             onSearchClicked = { queryText -> onSearchButtonClicked(queryText) },
-                            showNetworkError
+                            showNetworkError,
+                            showEmptyQueryError,
+                            viewModel.showLoadingIndicator
                         )
                     }
+
                 }
+
             }
         }
     }
 
     private fun onSearchButtonClicked(queryText: String) {
-        if (isNetworkConnected.value) {
-            showNetworkError.value = false
-            viewModel.fetchImagesForQueryString(queryText)
-        } else {
-            showNetworkError.value = true
+
+        when {
+            queryText.isEmpty() -> showEmptyQueryError.value = true
+            !isNetworkConnected.value -> showNetworkError.value = true
+            else -> {
+                showEmptyQueryError.value = false
+                showNetworkError.value = false
+                viewModel.fetchImagesForQueryString(queryText)
+            }
         }
     }
 

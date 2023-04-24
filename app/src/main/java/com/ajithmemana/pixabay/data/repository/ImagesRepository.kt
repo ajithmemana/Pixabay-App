@@ -27,7 +27,7 @@ class ImagesRepository @Inject constructor(
      *
      * @param queryString - Input string param for Pixabay API.
      */
-    fun fetchImagesForQueryString(queryString: String) =
+    fun fetchImagesForQueryString(queryString: String, onSearchComplete: ()->Unit) =
         pixabayImageService.getImagesByQueryString(PIXABAY_API_KEY, queryString).enqueue(
             object : Callback<SearchResponse> {
                 override fun onResponse(
@@ -54,11 +54,12 @@ class ImagesRepository @Inject constructor(
                         pixabayImagesDao.deleteAll()
                         pixabayImagesDao.insertAll(mappedList)
                     }
+                    onSearchComplete()
                 }
 
                 override fun onFailure(call: Call<SearchResponse>, t: Throwable) {
-                    Log.d("TEST", "onFailure calling api")
                     //todo handle error
+                    onSearchComplete()
                 }
             }
         )

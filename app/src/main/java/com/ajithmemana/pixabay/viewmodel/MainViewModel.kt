@@ -1,5 +1,6 @@
 package com.ajithmemana.pixabay.viewmodel
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.ajithmemana.pixabay.data.database.entity.PixabayImageItem
 import com.ajithmemana.pixabay.data.repository.ImagesRepository
@@ -15,6 +16,7 @@ class MainViewModel @Inject constructor(private val imagesRepository: ImagesRepo
     ViewModel() {
 
     lateinit var imageData: Flow<List<PixabayImageItem>>
+    var showLoadingIndicator = mutableStateOf(false)
 
     /**
      * Method to start observing database for changes and storing them to a local variable for UI
@@ -27,11 +29,15 @@ class MainViewModel @Inject constructor(private val imagesRepository: ImagesRepo
     /**
      * Perform a search in Pixabay cloud server using an input string.
      * Returned data is stored directly into db in an asynchronous manner
+     * A higher order function is called back from repository class to indicate completion
      *
      * @param inputString - Text to be searched for
      */
     fun fetchImagesForQueryString(inputString: String) {
-        imagesRepository.fetchImagesForQueryString(inputString)
+        showLoadingIndicator.value = true
+        imagesRepository.fetchImagesForQueryString(
+            inputString
+        ) { showLoadingIndicator.value = false }
     }
 }
 

@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.sp
+import com.ajithmemana.pixabay.ui.theme.textColorPrimary
 
 /**
  * Composable item to display a number and icon that represent stats - ex: downloads, likes, comments etc
@@ -18,6 +19,8 @@ import androidx.compose.ui.unit.sp
 fun ImageStatsItem(iconRes: Int, count: Int?) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Icon(painterResource(id = iconRes), contentDescription = null)
-        Text(text = "$count", fontSize = 12.sp)
+        Text(
+            text = "$count", fontSize = 12.sp, color = textColorPrimary
+        )
     }
 }

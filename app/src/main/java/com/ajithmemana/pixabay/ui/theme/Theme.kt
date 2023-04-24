@@ -10,6 +10,7 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -18,7 +19,7 @@ import androidx.core.view.ViewCompat
 private val DarkColorScheme = darkColorScheme(
     primary = PrimaryDark,
     secondary = SecondaryDark,
-    tertiary = TertiaryDark
+    tertiary = TertiaryDark,
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -56,3 +57,17 @@ fun PixabayTheme(
         content = content
     )
 }
+
+// Extra colors
+val searchBarBackground: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) SearchBarBackgroundDark else SearchBarBackgroundLight
+
+val textColorPrimary: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) TextDark else TextLight
+
+val buttonColor: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) ButtonBackgroundDark else ButtonBackgroundLight
+

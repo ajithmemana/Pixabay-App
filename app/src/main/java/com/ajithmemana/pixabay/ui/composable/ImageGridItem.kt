@@ -19,6 +19,7 @@ import com.ajithmemana.pixabay.data.database.entity.PixabayImageItem
 import com.ajithmemana.pixabay.ui.theme.Dimens.margin_medium
 import com.ajithmemana.pixabay.ui.theme.Dimens.margin_small
 import com.ajithmemana.pixabay.ui.theme.Typography
+import com.ajithmemana.pixabay.ui.theme.textColorPrimary
 
 /**
  * Composable for an individual cell of image grid
@@ -43,12 +44,14 @@ fun ImageGridItem(imageItem: PixabayImageItem, onImageItemClick: (PixabayImageIt
         Text(
             modifier = Modifier.padding(margin_medium, 0.dp),
             text = stringResource(id = R.string.label_author).plus(imageItem.user),
-            style = Typography.labelLarge
+            style = Typography.labelLarge,
+            color = textColorPrimary
         )
         Text(
             modifier = Modifier.padding(margin_medium, 0.dp, margin_medium, margin_medium),
             text = stringResource(id = R.string.label_tags).plus(imageItem.tags),
-            style = Typography.labelSmall
+            style = Typography.labelSmall,
+            color = textColorPrimary
         )
     }
 }

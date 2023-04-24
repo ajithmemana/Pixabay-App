@@ -25,12 +25,18 @@ import com.google.gson.Gson
 fun PixabayApp(
     imageData: List<PixabayImageItem>,
     onSearchClicked: (String) -> Unit = {},
-    showNetworkError: MutableState<Boolean>
+    showNetworkError: MutableState<Boolean>,
+    showEmptyStringError: MutableState<Boolean>,
+    showLoadingIndicator: MutableState<Boolean>,
 ) {
     val navController = rememberNavController()
     PixabayAppNavHost(
-        navController = navController, imageData = imageData, onSearchClicked = onSearchClicked,
-        showNetworkError = showNetworkError
+        navController = navController,
+        imageData = imageData,
+        onSearchClicked = onSearchClicked,
+        showNetworkError = showNetworkError,
+        showEmptyStringError = showEmptyStringError,
+        showLoadingIndicator = showLoadingIndicator
     )
 }
 
@@ -39,20 +45,26 @@ fun PixabayAppNavHost(
     navController: NavHostController,
     imageData: List<PixabayImageItem>,
     onSearchClicked: (String) -> Unit = {},
-    showNetworkError: MutableState<Boolean>
+    showNetworkError: MutableState<Boolean>,
+    showEmptyStringError: MutableState<Boolean>,
+    showLoadingIndicator: MutableState<Boolean>,
 ) {
     NavHost(
         navController = navController, startDestination = NavigationRoute.IMAGES_LIST.route
     ) {
         // Screen 1
         composable(NavigationRoute.IMAGES_LIST.route) {
-            PixabayImagesListScreen(imageData,
+            PixabayImagesListScreen(
+                imageData,
                 onSearchClick = { onSearchClicked(it) },
                 onImageClick = {
                     val data = Uri.encode(Gson().toJson(it))
                     navController.navigate("${NavigationRoute.IMAGE_DETAILS.route}/$data")
                 },
-                showNetworkError)
+                showNetworkError,
+                showEmptyStringError,
+                showLoadingIndicator
+            )
         }
         // Screen 2
         composable(
