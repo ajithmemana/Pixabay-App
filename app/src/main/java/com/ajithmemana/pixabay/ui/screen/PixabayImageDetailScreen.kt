@@ -38,7 +38,8 @@ import com.ajithmemana.pixabay.ui.theme.textColorPrimary
  */
 @Composable
 fun PixabayImageDetailScreen(
-    imageItem: PixabayImageItem, onBackClick: () -> Unit,
+    imageItem: PixabayImageItem,
+    onBackClick: () -> Unit,
     onTagClick: (String) -> Unit,
 ) {
 
@@ -63,7 +64,7 @@ fun PixabayImageDetailScreen(
 
         Text(
             text = stringResource(id = R.string.label_author).plus(imageItem.user),
-            modifier = Modifier.padding(margin_large, margin_small),
+            modifier = Modifier.padding(margin_large, margin_medium),
             color = textColorPrimary
         )
 
@@ -76,7 +77,6 @@ fun PixabayImageDetailScreen(
             Modifier
                 .fillMaxWidth()
                 .padding(0.dp, margin_medium),
-
             horizontalArrangement = Arrangement.SpaceAround
         ) {
             ImageStatsItem(R.drawable.ic_like, imageItem.likes)

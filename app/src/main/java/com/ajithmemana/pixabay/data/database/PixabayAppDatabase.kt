@@ -6,6 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.ajithmemana.pixabay.data.database.dao.PixabayImagesDao
 import com.ajithmemana.pixabay.data.database.entity.PixabayImageItem
+import com.ajithmemana.pixabay.util.DATABASE_NAME
 
 /**
  * Created by ajithmemana
@@ -21,7 +22,7 @@ abstract class PixabayAppDatabase : RoomDatabase() {
         fun getDatabase(context: Context): PixabayAppDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
-                    context.applicationContext, PixabayAppDatabase::class.java, "pixabay_app_db"
+                    context.applicationContext, PixabayAppDatabase::class.java, DATABASE_NAME
                 ).build()
 
                 INSTANCE = instance

@@ -1,8 +1,19 @@
 buildscript {
     ext {
+        activityComposeVersion = '1.7.0'
+        activityComposeVersion = '1.7.0'
+        coilComposeVersion = '2.2.0'
         compose_version = '1.5.0-alpha02'
+        coreKtxVersion = '1.10.0'
+        espressoVersion = '3.5.1'
         gsonConvertorVersion = "2.9.0"
-        hiltVersion = '2.43.2'
+        hiltVersion = '2.44'
+        junitExtVersion = '1.1.5'
+        junitVersion = '4.13.2'
+        lifecycleVersion = '2.6.1'
+        lifecycleVersion = '2.6.1'
+        material3Version = '1.1.0-beta02'
+        materialVersion = '1.8.0'
         nav_version = "2.5.3"
         retrofitVersion = '2.9.0'
         roomVersion = '2.5.1'

@@ -1,6 +1,5 @@
 package com.ajithmemana.pixabay.ui.composable
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -21,6 +20,14 @@ import com.ajithmemana.pixabay.ui.theme.Dimens.margin_small
 import com.ajithmemana.pixabay.ui.theme.buttonColor
 import com.ajithmemana.pixabay.ui.theme.textColorPrimary
 
+/**
+ * Confirmation alert dialog before navigating to detail page
+ *
+ * @param dismissAlert - callback when user click cancel/dismiss button
+ * @param proceedToDetails -  callback when user click proceed button
+ * @receiver
+ * @receiver
+ */
 @Composable
 fun ConfirmationDialog(dismissAlert: () -> Unit, proceedToDetails: () -> Unit) {
     AlertDialog(

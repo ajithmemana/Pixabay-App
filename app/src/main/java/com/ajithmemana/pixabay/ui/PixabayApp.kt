@@ -52,7 +52,7 @@ fun PixabayAppNavHost(
     NavHost(
         navController = navController, startDestination = NavigationRoute.IMAGES_LIST.route
     ) {
-        // Screen 1
+        // Screen 1 - List
         composable(NavigationRoute.IMAGES_LIST.route) {
             PixabayImagesListScreen(
                 imageData,
@@ -66,7 +66,7 @@ fun PixabayAppNavHost(
                 showLoadingIndicator
             )
         }
-        // Screen 2
+        // Screen 2 - Details
         composable(
             "${NavigationRoute.IMAGE_DETAILS.route}/{${NavigationRouteParams.IMAGE_ITEM.value}}",
             arguments = listOf(navArgument(NavigationRouteParams.IMAGE_ITEM.value) {

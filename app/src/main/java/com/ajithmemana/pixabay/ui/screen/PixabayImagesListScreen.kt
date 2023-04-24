@@ -69,7 +69,8 @@ import com.ajithmemana.pixabay.util.isNetworkConnected
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PixabayImagesListScreen(
-    imageData: List<PixabayImageItem>, onSearchClick: (String) -> Unit,
+    imageData: List<PixabayImageItem>,
+    onSearchClick: (String) -> Unit,
     onImageClick: (PixabayImageItem) -> Unit = {},
     showNetworkError: MutableState<Boolean>,
     showEmptyStringError: MutableState<Boolean>,
@@ -99,17 +100,17 @@ fun PixabayImagesListScreen(
 
         // Empty string warning
         AnimatedVisibility(visible = showEmptyStringError.value) {
-            NetworkErrorMessage(R.string.error_empty_search_query) {
+            ErrorMessage(R.string.error_empty_search_query) {
                 showEmptyStringError.value = false
             }
         }
         // Network warning
         AnimatedVisibility(visible = showNetworkError.value && !isNetworkConnected.value) {
-            NetworkErrorMessage(R.string.error_network_not_available) {
+            ErrorMessage(R.string.error_network_not_available) {
                 showNetworkError.value = false
             }
         }
-
+        // Loading indicator
         AnimatedVisibility(
             modifier = Modifier.fillMaxWidth(),
             visible = showLoadingIndicator.value
@@ -122,7 +123,7 @@ fun PixabayImagesListScreen(
         val configuration = LocalConfiguration.current
         val numOfColumns =
             if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) NUM_ROWS_LANDSCAPE else NUM_ROWS_PORTRAIT
-        // Vertical Image Grid -  If image date is present show the grid, else show empty message
+        // If image date is present show grid, else show empty list message
         if (imageData.isNotEmpty()) {
             LazyVerticalStaggeredGrid(
                 columns = StaggeredGridCells.Fixed(numOfColumns),
@@ -136,7 +137,7 @@ fun PixabayImagesListScreen(
                     }
                 }
             }
-        } else {
+        } else if(!showLoadingIndicator.value) {
             Text(
                 textAlign = TextAlign.Center,
                 text = stringResource(R.string.no_results_found),
@@ -210,7 +211,7 @@ fun SearchBar(
 }
 
 @Composable
-fun NetworkErrorMessage(resId: Int, dismissAlert: () -> Unit) {
+fun ErrorMessage(resId: Int, dismissAlert: () -> Unit) {
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically

@@ -9,7 +9,6 @@ import androidx.compose.ui.unit.dp
 object Dimens {
     val margin_small: Dp = 4.dp
     val margin_medium: Dp = 8.dp
-    val margin_normal: Dp = 12.dp
     val margin_large: Dp = 16.dp
     val margin_xlarge: Dp = 24.dp
 

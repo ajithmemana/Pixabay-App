@@ -10,16 +10,13 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.content.ContextCompat.getSystemService
 import com.ajithmemana.pixabay.data.repository.ImagesRepository
 import com.ajithmemana.pixabay.ui.PixabayApp
 import com.ajithmemana.pixabay.ui.theme.PixabayTheme
+import com.ajithmemana.pixabay.util.DEFAULT_QUERY_TEXT
 import com.ajithmemana.pixabay.util.isNetworkConnected
 import com.ajithmemana.pixabay.util.networkCallback
 import com.ajithmemana.pixabay.viewmodel.MainViewModel
@@ -36,8 +33,7 @@ class MainActivity : ComponentActivity() {
 
     private lateinit var connectivityManager: ConnectivityManager
 
-    private var showNetworkError = mutableStateOf(false)
-    private var showEmptyQueryError = mutableStateOf(false)
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,8 +51,8 @@ class MainActivity : ComponentActivity() {
                         PixabayApp(
                             imageData = it,
                             onSearchClicked = { queryText -> onSearchButtonClicked(queryText) },
-                            showNetworkError,
-                            showEmptyQueryError,
+                            viewModel.showNetworkError,
+                            viewModel.showEmptyQueryError,
                             viewModel.showLoadingIndicator
                         )
                     }
@@ -70,11 +66,11 @@ class MainActivity : ComponentActivity() {
     private fun onSearchButtonClicked(queryText: String) {
 
         when {
-            queryText.isEmpty() -> showEmptyQueryError.value = true
-            !isNetworkConnected.value -> showNetworkError.value = true
+            queryText.isEmpty() -> viewModel.showEmptyQueryError.value = true
+            !isNetworkConnected.value -> viewModel.showNetworkError.value = true
             else -> {
-                showEmptyQueryError.value = false
-                showNetworkError.value = false
+                viewModel.showEmptyQueryError.value = false
+                viewModel.showNetworkError.value = false
                 viewModel.fetchImagesForQueryString(queryText)
             }
         }
@@ -82,7 +78,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.fetchImagesForQueryString("fruits")
+        viewModel.fetchImagesForQueryString(DEFAULT_QUERY_TEXT)
     }
 
     override fun onStop() {
@@ -106,13 +102,5 @@ class MainActivity : ComponentActivity() {
             .build()
 
         connectivityManager.registerNetworkCallback(networkRequest, networkCallback)
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    PixabayTheme {
-        Text(text = "Pixabay App")
     }
 }

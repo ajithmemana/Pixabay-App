@@ -11,12 +11,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.ajithmemana.pixabay.ui.theme.Dimens.margin_large
+import com.ajithmemana.pixabay.ui.theme.Dimens.margin_medium
 import com.ajithmemana.pixabay.ui.theme.Dimens.margin_small
-import com.ajithmemana.pixabay.ui.theme.textColorPrimary
 
 /**
  * Custom tag chip with click
@@ -41,9 +42,10 @@ fun TagItem(tags: List<String>, onItemClick: (tagString: String) -> Unit) {
                     )
                     .padding(margin_small)
                     .height(24.dp)
+                    .align(Alignment.CenterVertically)
                     .clickable { onItemClick(it) },
             )
-            Spacer(modifier = Modifier.width(4.dp))
+            Spacer(modifier = Modifier.width(margin_medium))
         }
     }
 }

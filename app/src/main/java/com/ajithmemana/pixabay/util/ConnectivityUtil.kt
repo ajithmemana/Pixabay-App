@@ -3,7 +3,6 @@ package com.ajithmemana.pixabay.util
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 
 /**
@@ -13,7 +12,7 @@ var isNetworkConnected = mutableStateOf(false)
 
 val networkCallback = object : ConnectivityManager.NetworkCallback() {
 
-    // network is available for use
+    // Network is available for use
     override fun onAvailable(network: Network) {
         super.onAvailable(network)
         isNetworkConnected.value = true

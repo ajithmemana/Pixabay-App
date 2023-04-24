@@ -21,12 +21,12 @@ data class PixabayImageItem(
     val likes: Int? = null,
     val comments: Int? = null,
     val downloads: Int? = null,
-    val webformatWidth: Float,
-    val webformatHeight: Float,
+    val webFormatWidth: Float,
+    val webFormatHeight: Float,
 ) : Parcelable {
     fun getAspectRatio(): Float {
-        return if (webformatWidth == 0.0f || webformatHeight == 0.0f) 1.0f else
-            (webformatWidth / webformatHeight)
+        return if (webFormatWidth == 0.0f || webFormatHeight == 0.0f) 1.0f else
+            (webFormatWidth / webFormatHeight)
     }
 }
 

@@ -1,6 +1,7 @@
 package com.ajithmemana.pixabay.di
 
 import com.ajithmemana.pixabay.data.api.PixabayImageService
+import com.ajithmemana.pixabay.util.PIXABAY_BASE_URL
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,12 +17,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 @InstallIn(ActivityComponent::class, SingletonComponent::class)
 object ApiModule {
 
-    private const val BASE_URL = "https://pixabay.com/"
-
     @Provides
     fun providesPixabayImageService(): PixabayImageService {
         return Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(PIXABAY_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build().create(PixabayImageService::class.java)
     }

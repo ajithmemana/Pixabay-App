@@ -17,7 +17,8 @@ class MainViewModel @Inject constructor(private val imagesRepository: ImagesRepo
 
     lateinit var imageData: Flow<List<PixabayImageItem>>
     var showLoadingIndicator = mutableStateOf(false)
-
+    var showNetworkError = mutableStateOf(false)
+    var showEmptyQueryError = mutableStateOf(false)
     /**
      * Method to start observing database for changes and storing them to a local variable for UI
      *

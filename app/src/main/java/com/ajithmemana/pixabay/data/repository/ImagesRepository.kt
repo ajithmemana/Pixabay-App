@@ -1,6 +1,5 @@
 package com.ajithmemana.pixabay.data.repository
 
-import android.util.Log
 import com.ajithmemana.pixabay.data.api.PixabayImageService
 import com.ajithmemana.pixabay.data.database.dao.PixabayImagesDao
 import com.ajithmemana.pixabay.data.database.entity.PixabayImageItem
@@ -45,8 +44,8 @@ class ImagesRepository @Inject constructor(
                             it.likes,
                             it.comments,
                             it.downloads,
-                            it.webformatWidth,
-                            it.webformatHeight
+                            it.webFormatWidth,
+                            it.webFormatHeight
                         )
                     }
 
@@ -58,7 +57,6 @@ class ImagesRepository @Inject constructor(
                 }
 
                 override fun onFailure(call: Call<SearchResponse>, t: Throwable) {
-                    //todo handle error
                     onSearchComplete()
                 }
             }
