@@ -20,49 +20,40 @@ import javax.inject.Inject
 class ImagesRepository @Inject constructor(
     private val pixabayImageService: PixabayImageService,
     private val pixabayImagesDao: PixabayImagesDao,
-) {
+) : ImagesRepositoryInterface {
     /**
      * Fetch images from Pixabay cloud for a particular query string
      *
      * @param queryString - Input string param for Pixabay API.
      */
-    fun fetchImagesForQueryString(queryString: String, onSearchComplete: ()->Unit) =
-        pixabayImageService.getImagesByQueryString(PIXABAY_API_KEY, queryString).enqueue(
-            object : Callback<SearchResponse> {
-                override fun onResponse(
-                    call: Call<SearchResponse>,
-                    response: Response<SearchResponse>,
-                ) {
-                    // Store date to DB
-                    val mappedList = response.body()?.hits?.map {
-                        PixabayImageItem(
-                            it?.id!!,
-                            it.previewURL,
-                            it.largeImageURL,
-                            it.tags,
-                            it.user ?: "",
-                            it.likes,
-                            it.comments,
-                            it.downloads,
-                            it.webFormatWidth,
-                            it.webFormatHeight
-                        )
-                    }
+    override suspend fun fetchImagesForQueryString(
+        queryString: String,
+        onSearchComplete: () -> Unit,
+    ) {
+        val response = pixabayImageService.getImagesByQueryString(PIXABAY_API_KEY, queryString)
 
-                    CoroutineScope(Dispatchers.IO).launch {
-                        pixabayImagesDao.deleteAll()
-                        pixabayImagesDao.insertAll(mappedList)
-                    }
-                    onSearchComplete()
-                }
+        val mappedList = response?.hits?.map {
+            PixabayImageItem(
+                it?.id!!,
+                it.previewURL,
+                it.largeImageURL,
+                it.tags,
+                it.user ?: "",
+                it.likes,
+                it.comments,
+                it.downloads,
+                it.webFormatWidth,
+                it.webFormatHeight
+            )
+        }
 
-                override fun onFailure(call: Call<SearchResponse>, t: Throwable) {
-                    onSearchComplete()
-                }
-            }
-        )
+        CoroutineScope(Dispatchers.IO).launch {
+            pixabayImagesDao.deleteAll()
+            pixabayImagesDao.insertAll(mappedList)
+        }
+        onSearchComplete()
+    }
 
-    fun observeStoredImages() = pixabayImagesDao.getAllImages()
-
+    override fun observeStoredImages() = pixabayImagesDao.getAllImages()
 }
 

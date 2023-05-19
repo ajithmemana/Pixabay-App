@@ -11,9 +11,9 @@ import retrofit2.http.Query
  */
 interface PixabayImageService {
     @GET("api/")
-    fun getImagesByQueryString(
+   suspend fun getImagesByQueryString(
         @Query("key") apiKey: String,
         @Query("q") query: String,
-    ): Call<SearchResponse>
+    ): SearchResponse
 }
 
