@@ -14,7 +14,7 @@ import com.ajithmemana.pixabay.ui.navigation.NavigationRouteParams
 import com.ajithmemana.pixabay.ui.navigation.PixabayImageItemNavType
 import com.ajithmemana.pixabay.ui.screen.PixabayImageDetailScreen
 import com.ajithmemana.pixabay.ui.screen.PixabayImagesListScreen
-import com.google.gson.Gson
+import com.squareup.moshi.Moshi
 
 /**
  * Pixabay application main UI entry point
@@ -58,7 +58,8 @@ fun PixabayAppNavHost(
                 imageData,
                 onSearchClick = { onSearchClicked(it) },
                 onImageClick = {
-                    val data = Uri.encode(Gson().toJson(it))
+                    val moshi =  Moshi.Builder().build().adapter(PixabayImageItem::class.java)
+                    val data = Uri.encode(moshi.toJson(it))
                     navController.navigate("${NavigationRoute.IMAGE_DETAILS.route}/$data")
                 },
                 showNetworkError,

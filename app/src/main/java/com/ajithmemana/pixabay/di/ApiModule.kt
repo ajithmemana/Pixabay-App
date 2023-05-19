@@ -8,7 +8,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityComponent
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.moshi.MoshiConverterFactory
 
 /**
  * Created by ajithmemana
@@ -21,7 +21,7 @@ object ApiModule {
     fun providesPixabayImageService(): PixabayImageService {
         return Retrofit.Builder()
             .baseUrl(PIXABAY_BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(MoshiConverterFactory.create())
             .build().create(PixabayImageService::class.java)
     }
 }

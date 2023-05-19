@@ -1,84 +1,84 @@
 package com.ajithmemana.pixabay.data.models
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
 
 data class SearchResponse(
 
-	@field:SerializedName("hits")
+	@Json(name = "hits")
 	val hits: List<HitsItem?>? = null,
 
-	@field:SerializedName("total")
+	@Json(name = "total")
 	val total: Int? = null,
 
-	@field:SerializedName("totalHits")
+	@Json(name = "totalHits")
 	val totalHits: Int? = null
 )
 
 data class HitsItem(
 
-	@field:SerializedName("webformatHeight")
+	@Json(name = "webformatHeight")
 	val webFormatHeight: Float = 0.0f,
 
-	@field:SerializedName("imageWidth")
+	@Json(name = "imageWidth")
 	val imageWidth: Int? = null,
 
-	@field:SerializedName("previewHeight")
+	@Json(name = "previewHeight")
 	val previewHeight: Int? = null,
 
-	@field:SerializedName("webformatURL")
+	@Json(name = "webformatURL")
 	val webFormatURL: String? = null,
 
-	@field:SerializedName("userImageURL")
+	@Json(name = "userImageURL")
 	val userImageURL: String? = null,
 
-	@field:SerializedName("previewURL")
+	@Json(name = "previewURL")
 	val previewURL: String? = null,
 
-	@field:SerializedName("comments")
+	@Json(name = "comments")
 	val comments: Int? = null,
 
-	@field:SerializedName("type")
+	@Json(name = "type")
 	val type: String? = null,
 
-	@field:SerializedName("imageHeight")
+	@Json(name = "imageHeight")
 	val imageHeight: Int? = null,
 
-	@field:SerializedName("tags")
+	@Json(name = "tags")
 	val tags: String? = null,
 
-	@field:SerializedName("previewWidth")
+	@Json(name = "previewWidth")
 	val previewWidth: Int? = null,
 
-	@field:SerializedName("downloads")
+	@Json(name = "downloads")
 	val downloads: Int? = null,
 
-	@field:SerializedName("collections")
+	@Json(name = "collections")
 	val collections: Int? = null,
 
-	@field:SerializedName("user_id")
+	@Json(name = "user_id")
 	val userId: Int? = null,
 
-	@field:SerializedName("largeImageURL")
+	@Json(name = "largeImageURL")
 	val largeImageURL: String? = null,
 
-	@field:SerializedName("pageURL")
+	@Json(name = "pageURL")
 	val pageURL: String? = null,
 
-	@field:SerializedName("id")
+	@Json(name = "id")
 	val id: Long? = null,
 
-	@field:SerializedName("imageSize")
+	@Json(name = "imageSize")
 	val imageSize: Int? = null,
 
-	@field:SerializedName("webformatWidth")
+	@Json(name = "webformatWidth")
 	val webFormatWidth: Float = 0.0f,
 
-	@field:SerializedName("user")
+	@Json(name = "user")
 	val user: String? = null,
 
-	@field:SerializedName("views")
+	@Json(name = "views")
 	val views: Int? = null,
 
-	@field:SerializedName("likes")
+	@Json(name = "likes")
 	val likes: Int? = null
 )
