@@ -11,14 +11,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat.getSystemService
 import com.ajithmemana.pixabay.data.repository.ImagesRepository
 import com.ajithmemana.pixabay.ui.PixabayApp
 import com.ajithmemana.pixabay.ui.theme.PixabayTheme
+import com.ajithmemana.pixabay.util.ConnectivityObserver
 import com.ajithmemana.pixabay.util.DEFAULT_QUERY_TEXT
-import com.ajithmemana.pixabay.util.isNetworkConnected
-import com.ajithmemana.pixabay.util.networkCallback
+import com.ajithmemana.pixabay.util.NetworkConnectivityObserver
+
 import com.ajithmemana.pixabay.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -31,17 +33,17 @@ class MainActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModels()
 
-    private lateinit var connectivityManager: ConnectivityManager
-
-
+    private lateinit var connectivityObserver: ConnectivityObserver
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        connectivityObserver = NetworkConnectivityObserver(applicationContext)
         viewModel.startObservingDb()
-        observeConnectivityChanges()
         setContent {
             val images = viewModel.imageData.collectAsState(initial = null)
             PixabayTheme {
+                val connectionStatus by connectivityObserver.observe()
+                    .collectAsState(initial = ConnectivityObserver.Status.UNAVAILABLE)
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -50,7 +52,13 @@ class MainActivity : ComponentActivity() {
                     images.value?.let {
                         PixabayApp(
                             imageData = it,
-                            onSearchClicked = { queryText -> onSearchButtonClicked(queryText) },
+                            onSearchClicked = { queryText ->
+                                onSearchButtonClicked(
+                                    queryText,
+                                    connectionStatus
+                                )
+                            },
+                            connectionStatus,
                             viewModel.showNetworkError,
                             viewModel.showEmptyQueryError,
                             viewModel.showLoadingIndicator
@@ -63,11 +71,16 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun onSearchButtonClicked(queryText: String) {
+    private fun onSearchButtonClicked(
+        queryText: String,
+        connectionStatus: ConnectivityObserver.Status,
+    ) {
 
         when {
             queryText.isEmpty() -> viewModel.showEmptyQueryError.value = true
-            !isNetworkConnected.value -> viewModel.showNetworkError.value = true
+            connectionStatus != ConnectivityObserver.Status.AVAILABLE -> viewModel.showNetworkError.value =
+                true
+
             else -> {
                 viewModel.showEmptyQueryError.value = false
                 viewModel.showNetworkError.value = false
@@ -78,29 +91,10 @@ class MainActivity : ComponentActivity() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.fetchImagesForQueryString(DEFAULT_QUERY_TEXT)
+        //  viewModel.fetchImagesForQueryString(DEFAULT_QUERY_TEXT)
     }
 
     override fun onStop() {
-        connectivityManager.unregisterNetworkCallback(networkCallback)
         super.onStop()
-    }
-
-    /**
-     * Monitor internet connectivity changes and update a global state variable
-     *
-     */
-    private fun observeConnectivityChanges() {
-        connectivityManager = getSystemService(
-            applicationContext,
-            ConnectivityManager::class.java
-        ) as ConnectivityManager
-        val networkRequest = NetworkRequest.Builder()
-            .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-            .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
-            .build()
-
-        connectivityManager.registerNetworkCallback(networkRequest, networkCallback)
     }
 }

@@ -19,11 +19,12 @@ Pros:
     Good looking UI
     Usage of LazyStaggeredGrid
 
-To be improved:
-
-    No tests
-    Usage of Gson with Kotlin not ideal 
+Resolved:
+    Usage of Gson with Kotlin not ideal
     Doesn't use Retrofit's built-in coroutine support
     Internet Connectivity detector is buggy
     Uses global variables
+
+To be improved:
+    No tests
     Understanding of Dependency Injection 

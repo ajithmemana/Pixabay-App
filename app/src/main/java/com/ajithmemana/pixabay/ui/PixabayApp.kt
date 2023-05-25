@@ -14,6 +14,7 @@ import com.ajithmemana.pixabay.ui.navigation.NavigationRouteParams
 import com.ajithmemana.pixabay.ui.navigation.PixabayImageItemNavType
 import com.ajithmemana.pixabay.ui.screen.PixabayImageDetailScreen
 import com.ajithmemana.pixabay.ui.screen.PixabayImagesListScreen
+import com.ajithmemana.pixabay.util.ConnectivityObserver
 import com.squareup.moshi.Moshi
 
 /**
@@ -25,6 +26,7 @@ import com.squareup.moshi.Moshi
 fun PixabayApp(
     imageData: List<PixabayImageItem>,
     onSearchClicked: (String) -> Unit = {},
+    connectionStatus: ConnectivityObserver.Status,
     showNetworkError: MutableState<Boolean>,
     showEmptyStringError: MutableState<Boolean>,
     showLoadingIndicator: MutableState<Boolean>,
@@ -34,6 +36,7 @@ fun PixabayApp(
         navController = navController,
         imageData = imageData,
         onSearchClicked = onSearchClicked,
+        connectionStatus = connectionStatus,
         showNetworkError = showNetworkError,
         showEmptyStringError = showEmptyStringError,
         showLoadingIndicator = showLoadingIndicator
@@ -45,6 +48,7 @@ fun PixabayAppNavHost(
     navController: NavHostController,
     imageData: List<PixabayImageItem>,
     onSearchClicked: (String) -> Unit = {},
+    connectionStatus: ConnectivityObserver.Status,
     showNetworkError: MutableState<Boolean>,
     showEmptyStringError: MutableState<Boolean>,
     showLoadingIndicator: MutableState<Boolean>,
@@ -62,6 +66,7 @@ fun PixabayAppNavHost(
                     val data = Uri.encode(moshi.toJson(it))
                     navController.navigate("${NavigationRoute.IMAGE_DETAILS.route}/$data")
                 },
+                connectionStatus,
                 showNetworkError,
                 showEmptyStringError,
                 showLoadingIndicator

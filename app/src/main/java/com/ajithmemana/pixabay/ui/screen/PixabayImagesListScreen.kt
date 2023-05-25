@@ -59,9 +59,9 @@ import com.ajithmemana.pixabay.ui.theme.Dimens.margin_xlarge
 import com.ajithmemana.pixabay.ui.theme.Typography
 import com.ajithmemana.pixabay.ui.theme.searchBarBackground
 import com.ajithmemana.pixabay.ui.theme.textColorPrimary
+import com.ajithmemana.pixabay.util.ConnectivityObserver
 import com.ajithmemana.pixabay.util.NUM_ROWS_LANDSCAPE
 import com.ajithmemana.pixabay.util.NUM_ROWS_PORTRAIT
-import com.ajithmemana.pixabay.util.isNetworkConnected
 
 /**
  * Created by ajithmemana
@@ -72,12 +72,12 @@ fun PixabayImagesListScreen(
     imageData: List<PixabayImageItem>,
     onSearchClick: (String) -> Unit,
     onImageClick: (PixabayImageItem) -> Unit = {},
+    connectionStatus: ConnectivityObserver.Status,
     showNetworkError: MutableState<Boolean>,
     showEmptyStringError: MutableState<Boolean>,
     showLoadingIndicator: MutableState<Boolean>,
 ) {
     val tappedImageItem = remember { mutableStateOf<PixabayImageItem?>(null) }
-
     Column {
         Column(
             modifier = Modifier
@@ -105,9 +105,9 @@ fun PixabayImagesListScreen(
             }
         }
         // Network warning
-        AnimatedVisibility(visible = showNetworkError.value && !isNetworkConnected.value) {
+        AnimatedVisibility(visible =(showNetworkError.value && connectionStatus != ConnectivityObserver.Status.AVAILABLE)) {
             ErrorMessage(R.string.error_network_not_available) {
-                showNetworkError.value = false
+                  showNetworkError.value = false
             }
         }
         // Loading indicator
@@ -137,7 +137,7 @@ fun PixabayImagesListScreen(
                     }
                 }
             }
-        } else if(!showLoadingIndicator.value) {
+        } else if (!showLoadingIndicator.value) {
             Text(
                 textAlign = TextAlign.Center,
                 text = stringResource(R.string.no_results_found),
@@ -152,7 +152,7 @@ fun PixabayImagesListScreen(
     if (tappedImageItem.value != null) {
         ConfirmationDialog(dismissAlert = { tappedImageItem.value = null }) {
             tappedImageItem.value?.let { it1 ->
-                if (isNetworkConnected.value) {
+                if (connectionStatus == ConnectivityObserver.Status.AVAILABLE) {
                     onImageClick(it1)
                 } else {
                     showNetworkError.value = true
