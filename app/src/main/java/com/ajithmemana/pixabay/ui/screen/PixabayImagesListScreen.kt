@@ -44,11 +44,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.ajithmemana.pixabay.R
 import com.ajithmemana.pixabay.data.database.entity.PixabayImageItem
 import com.ajithmemana.pixabay.ui.composable.ConfirmationDialog
 import com.ajithmemana.pixabay.ui.composable.ImageGridItem
+import com.ajithmemana.pixabay.ui.preview.PixabayImageItemPreviewParam
 import com.ajithmemana.pixabay.ui.theme.Dimens.card_corner_large
 import com.ajithmemana.pixabay.ui.theme.Dimens.card_corner_normal
 import com.ajithmemana.pixabay.ui.theme.Dimens.grid_item_padding
@@ -81,7 +84,11 @@ fun PixabayImagesListScreen(
     Column {
         Column(
             modifier = Modifier
-                .clip(RoundedCornerShape(0.dp, 0.dp, card_corner_large, card_corner_large))
+                .clip(
+                    RoundedCornerShape(
+                        0.dp, 0.dp, card_corner_large, card_corner_large
+                    )
+                )
                 .background(searchBarBackground)
         ) {
             Text(
@@ -105,15 +112,14 @@ fun PixabayImagesListScreen(
             }
         }
         // Network warning
-        AnimatedVisibility(visible =(showNetworkError.value && connectionStatus != ConnectivityObserver.Status.AVAILABLE)) {
+        AnimatedVisibility(visible = (showNetworkError.value && connectionStatus != ConnectivityObserver.Status.AVAILABLE)) {
             ErrorMessage(R.string.error_network_not_available) {
-                  showNetworkError.value = false
+                showNetworkError.value = false
             }
         }
         // Loading indicator
         AnimatedVisibility(
-            modifier = Modifier.fillMaxWidth(),
-            visible = showLoadingIndicator.value
+            modifier = Modifier.fillMaxWidth(), visible = showLoadingIndicator.value
         ) {
             Row(horizontalArrangement = Arrangement.Center) {
                 CircularProgressIndicator(modifier = Modifier.size(32.dp))
@@ -174,8 +180,7 @@ fun SearchBar(
     }
 
     Row(
-        Modifier
-            .padding(margin_large), verticalAlignment = (Alignment.CenterVertically)
+        Modifier.padding(margin_large), verticalAlignment = (Alignment.CenterVertically)
 
     ) {
 
@@ -198,7 +203,8 @@ fun SearchBar(
         Spacer(modifier = Modifier.width(margin_medium))
 
         IconButton(
-            onClick = { onSearchClick(queryString.text) }, modifier = Modifier
+            onClick = { onSearchClick(queryString.text) },
+            modifier = Modifier
                 .size(36.dp)
                 .padding(margin_small)
         ) {
@@ -213,24 +219,54 @@ fun SearchBar(
 @Composable
 fun ErrorMessage(resId: Int, dismissAlert: () -> Unit) {
     Row(
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
+        horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically
     ) {
 
         Spacer(modifier = Modifier.width(margin_xlarge))
         Text(
-            text = stringResource(id = resId),
-            color = textColorPrimary
+            text = stringResource(id = resId), color = textColorPrimary
         )
         Spacer(modifier = Modifier.width(margin_large))
         Button(
             onClick = { dismissAlert() },
             colors = ButtonDefaults.buttonColors(
-                backgroundColor = Color.DarkGray,
-                contentColor = Color.White
+                backgroundColor = Color.DarkGray, contentColor = Color.White
             ),
         ) {
             Text(text = stringResource(id = R.string.button_ok))
         }
     }
+}
+
+@Preview
+@Composable
+fun previewErrorMessage() {
+    ErrorMessage(resId = R.string.app_name) {
+        // Do nothing
+    }
+}
+
+@Preview
+@Composable
+fun previewSearchBar() {
+    SearchBar() {
+
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun previewScreen(@PreviewParameter(PixabayImageItemPreviewParam::class) item: List<PixabayImageItem>) {
+    val falseState = remember {
+        mutableStateOf(false)
+    }
+    PixabayImagesListScreen(
+        imageData = item,
+        showLoadingIndicator = falseState,
+        showNetworkError = falseState,
+        showEmptyStringError = falseState,
+        onImageClick = { },
+        onSearchClick = { },
+        connectionStatus = ConnectivityObserver.Status.AVAILABLE
+    )
 }

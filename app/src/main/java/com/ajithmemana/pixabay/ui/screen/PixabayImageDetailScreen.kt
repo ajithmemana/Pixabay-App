@@ -16,12 +16,15 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.ajithmemana.pixabay.R
 import com.ajithmemana.pixabay.data.database.entity.PixabayImageItem
 import com.ajithmemana.pixabay.ui.composable.ImageStatsItem
 import com.ajithmemana.pixabay.ui.composable.TagItem
+import com.ajithmemana.pixabay.ui.preview.PixabayImageItemPreviewParam
 import com.ajithmemana.pixabay.ui.theme.Dimens.margin_large
 import com.ajithmemana.pixabay.ui.theme.Dimens.margin_medium
 import com.ajithmemana.pixabay.ui.theme.Dimens.margin_small
@@ -45,8 +48,7 @@ fun PixabayImageDetailScreen(
 
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
         IconButton(
-            onClick = onBackClick,
-            modifier = Modifier.padding(margin_small)
+            onClick = onBackClick, modifier = Modifier.padding(margin_small)
         ) {
             Icon(
                 Icons.Filled.ArrowBack,
@@ -69,7 +71,7 @@ fun PixabayImageDetailScreen(
         )
 
         imageItem.tags?.split(",")?.let {
-            TagItem(tags = it) {tagString->
+            TagItem(tags = it) { tagString ->
                 onTagClick(tagString)
             }
         }
@@ -85,4 +87,10 @@ fun PixabayImageDetailScreen(
 
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun previewImageDetailScreen(@PreviewParameter(PixabayImageItemPreviewParam::class) item: List<PixabayImageItem>) {
+    PixabayImageDetailScreen(item[0], {}, {})
 }
