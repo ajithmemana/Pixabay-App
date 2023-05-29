@@ -39,8 +39,8 @@ fun ImageGridItem(imageItem: PixabayImageItem, onImageItemClick: (PixabayImageIt
     ) {
         AsyncImage(
             modifier = Modifier.aspectRatio(imageItem.getAspectRatio()),
-            model = imageItem.previewURL,
-            contentScale = ContentScale.FillBounds,
+            model = imageItem.largeImageURL,
+            contentScale = ContentScale.Crop,
             alignment = Alignment.Center,
             contentDescription = null,
             placeholder = painterResource(id = R.drawable.placeholder)

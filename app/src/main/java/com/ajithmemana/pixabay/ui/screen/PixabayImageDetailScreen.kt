@@ -91,7 +91,7 @@ fun PixabayImageDetailScreen(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun previewImageDetailScreen(@PreviewParameter(PixabayImageItemPreviewParam::class) item: List<PixabayImageItem>) {
     PixabayImageDetailScreen(item[0], {}, {})

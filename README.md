@@ -28,3 +28,7 @@ Resolved:
 To be improved:
     No tests
     Understanding of Dependency Injection 
+
+TODO:
+Dynamic colors - https://m3.material.io/styles/color/dynamic-color/overview
+Preview diff screens - https://developer.android.com/jetpack/compose/tooling/previews
