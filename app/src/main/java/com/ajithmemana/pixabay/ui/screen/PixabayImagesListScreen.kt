@@ -28,7 +28,6 @@ import androidx.compose.material.Text
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -52,6 +51,8 @@ import com.ajithmemana.pixabay.data.database.entity.PixabayImageItem
 import com.ajithmemana.pixabay.ui.composable.ConfirmationDialog
 import com.ajithmemana.pixabay.ui.composable.ImageGridItem
 import com.ajithmemana.pixabay.ui.preview.PixabayImageItemPreviewParam
+import com.ajithmemana.pixabay.ui.MainUiEvent
+import com.ajithmemana.pixabay.ui.MainUiState
 import com.ajithmemana.pixabay.ui.theme.Dimens.card_corner_large
 import com.ajithmemana.pixabay.ui.theme.Dimens.card_corner_normal
 import com.ajithmemana.pixabay.ui.theme.Dimens.grid_item_padding
@@ -76,9 +77,8 @@ fun PixabayImagesListScreen(
     onSearchClick: (String) -> Unit,
     onImageClick: (PixabayImageItem) -> Unit = {},
     connectionStatus: ConnectivityObserver.Status,
-    showNetworkError: MutableState<Boolean>,
-    showEmptyStringError: MutableState<Boolean>,
-    showLoadingIndicator: MutableState<Boolean>,
+    mainUiState: MainUiState,
+    mainUiEvent: MainUiEvent,
 ) {
     val tappedImageItem = remember { mutableStateOf<PixabayImageItem?>(null) }
     Column {
@@ -106,20 +106,20 @@ fun PixabayImagesListScreen(
         )
 
         // Empty string warning
-        AnimatedVisibility(visible = showEmptyStringError.value) {
+        AnimatedVisibility(visible = mainUiState.showEmptyQueryError) {
             ErrorMessage(R.string.error_empty_search_query) {
-                showEmptyStringError.value = false
+                mainUiEvent.showEmptyQueryError(false)
             }
         }
         // Network warning
-        AnimatedVisibility(visible = (showNetworkError.value && connectionStatus != ConnectivityObserver.Status.AVAILABLE)) {
+        AnimatedVisibility(visible = (mainUiState.showNetworkError && connectionStatus != ConnectivityObserver.Status.AVAILABLE)) {
             ErrorMessage(R.string.error_network_not_available) {
-                showNetworkError.value = false
+                mainUiEvent.showNetworkError(false)
             }
         }
         // Loading indicator
         AnimatedVisibility(
-            modifier = Modifier.fillMaxWidth(), visible = showLoadingIndicator.value
+            modifier = Modifier.fillMaxWidth(), visible = mainUiState.showLoadingIndicator
         ) {
             Row(horizontalArrangement = Arrangement.Center) {
                 CircularProgressIndicator(modifier = Modifier.size(32.dp))
@@ -143,7 +143,7 @@ fun PixabayImagesListScreen(
                     }
                 }
             }
-        } else if (!showLoadingIndicator.value) {
+        } else if (!mainUiState.showLoadingIndicator) {
             Text(
                 textAlign = TextAlign.Center,
                 text = stringResource(R.string.no_results_found),
@@ -161,7 +161,7 @@ fun PixabayImagesListScreen(
                 if (connectionStatus == ConnectivityObserver.Status.AVAILABLE) {
                     onImageClick(it1)
                 } else {
-                    showNetworkError.value = true
+                    mainUiEvent.showNetworkError(false)
                     tappedImageItem.value = null
                 }
             }
@@ -262,9 +262,12 @@ fun previewScreen(@PreviewParameter(PixabayImageItemPreviewParam::class) item: L
     }
     PixabayImagesListScreen(
         imageData = item,
-        showLoadingIndicator = falseState,
-        showNetworkError = falseState,
-        showEmptyStringError = falseState,
+        mainUiState = MainUiState(
+            showLoadingIndicator = false,
+            showNetworkError = false,
+            showEmptyQueryError = false
+        ),
+        mainUiEvent = MainUiEvent(),
         onImageClick = { },
         onSearchClick = { },
         connectionStatus = ConnectivityObserver.Status.AVAILABLE

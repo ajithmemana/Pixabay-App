@@ -2,7 +2,6 @@ package com.ajithmemana.pixabay.ui
 
 import android.net.Uri
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -27,9 +26,8 @@ fun PixabayApp(
     imageData: List<PixabayImageItem>,
     onSearchClicked: (String) -> Unit = {},
     connectionStatus: ConnectivityObserver.Status,
-    showNetworkError: MutableState<Boolean>,
-    showEmptyStringError: MutableState<Boolean>,
-    showLoadingIndicator: MutableState<Boolean>,
+    mainUiState: MainUiState,
+    mainUiEvent: MainUiEvent,
 ) {
     val navController = rememberNavController()
     PixabayAppNavHost(
@@ -37,9 +35,8 @@ fun PixabayApp(
         imageData = imageData,
         onSearchClicked = onSearchClicked,
         connectionStatus = connectionStatus,
-        showNetworkError = showNetworkError,
-        showEmptyStringError = showEmptyStringError,
-        showLoadingIndicator = showLoadingIndicator
+        mainUiState = mainUiState,
+        mainUiEvent = mainUiEvent,
     )
 }
 
@@ -49,9 +46,8 @@ fun PixabayAppNavHost(
     imageData: List<PixabayImageItem>,
     onSearchClicked: (String) -> Unit = {},
     connectionStatus: ConnectivityObserver.Status,
-    showNetworkError: MutableState<Boolean>,
-    showEmptyStringError: MutableState<Boolean>,
-    showLoadingIndicator: MutableState<Boolean>,
+    mainUiState: MainUiState,
+    mainUiEvent: MainUiEvent,
 ) {
     NavHost(
         navController = navController, startDestination = NavigationRoute.IMAGES_LIST.route
@@ -62,14 +58,13 @@ fun PixabayAppNavHost(
                 imageData,
                 onSearchClick = { onSearchClicked(it) },
                 onImageClick = {
-                    val moshi =  Moshi.Builder().build().adapter(PixabayImageItem::class.java)
+                    val moshi = Moshi.Builder().build().adapter(PixabayImageItem::class.java)
                     val data = Uri.encode(moshi.toJson(it))
                     navController.navigate("${NavigationRoute.IMAGE_DETAILS.route}/$data")
                 },
                 connectionStatus,
-                showNetworkError,
-                showEmptyStringError,
-                showLoadingIndicator
+                mainUiState,
+                mainUiEvent
             )
         }
         // Screen 2 - Details
